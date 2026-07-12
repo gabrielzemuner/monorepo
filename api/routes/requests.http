@@ -1,0 +1,58 @@
+### Listar todos os cursosGET http://localhost:8000/api/courses
+
+### Criar
+POST http://localhost:8000/api/courses
+Content-Type: application/json
+
+{
+  "title": "Curso de Laravel Avançado v3",
+  "description": "Arquitetura, testes e boas práticas"
+}
+
+### Criar outro curso (pra ter mais de um na lista)
+POST http://localhost:8000/api/courses
+Content-Type: application/json
+
+{
+  "title": "Curso de React do Zero",
+  "description": "Componentização, hooks e ecossistema"
+}
+
+### Ver um curso específico (troque o 1 pelo id retornado no create)
+GET http://localhost:8000/api/courses/1
+
+### Atualizar um curso
+PUT http://localhost:8000/api/courses/1
+Content-Type: application/json
+
+{
+  "title": "Curso de Laravel Avançado (Atualizado)",
+  "description": "Arquitetura, testes, boas práticas e agora com Postgres"
+}
+
+### Deletar um curso
+DELETE http://localhost:8000/api/courses/2
+
+### Testar validação — título vazio (deve retornar 422)
+POST http://localhost:8000/api/courses
+Content-Type: application/json
+Accept: application/json
+
+
+{
+  "title": "",
+  "description": "teste"
+}
+
+### Testar validação — descrição curta (deve retornar 422)
+POST http://localhost:8000/api/courses
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Curso Teste",
+  "description": "curta"
+}
+
+### Testar curso inexistente (deve retornar 404)
+GET http://localhost:8000/api/courses/9999
