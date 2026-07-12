@@ -56,3 +56,34 @@ Accept: application/json
 
 ### Testar curso inexistente (deve retornar 404)
 GET http://localhost:8000/api/courses/9999
+
+### Criar uma lesson dentro do curso 1
+POST http://localhost:8000/api/courses/1/lessons
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Introdução ao Eloquent",
+  "content": "Nessa aula vamos entender os relacionamentos básicos",
+  "order": 1
+}
+
+### Listar lessons do curso 1
+GET http://localhost:8000/api/courses/1/lessons
+
+### Ver uma lesson específica (sem precisar do course_id na URL)
+GET http://localhost:8000/api/lessons/2
+
+### Atualizar
+PUT http://localhost:8000/api/lessons/2
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Introdução ao Eloquent (Atualizado)",
+  "content": "Conteúdo revisado",
+  "order": 1
+}
+
+### Deletar
+DELETE http://localhost:8000/api/lessons/1

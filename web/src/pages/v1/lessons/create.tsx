@@ -1,63 +1,43 @@
-import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "@/hooks/useForm";
-import { fetchCourse, updateCourse, type CoursePayload } from "@/api/courses";
+import { createLesson, type LessonPayload } from "@/api/lessons";
 import AppLayout from "@/components/app-layout";
 
-export default function CoursesEdit() {
-  const { id } = useParams();
+export default function LessonsCreate() {
+  const { courseId } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
 
-  const { data, setData, processing, errors, reset, submit } =
-    useForm<CoursePayload>({
-      title: "",
-      description: "",
-    });
-
-  useEffect(() => {
-    async function loadCourse() {
-      const course = await fetchCourse(Number(id));
-      reset({ title: course.title, description: course.description });
-      setLoading(false);
-    }
-
-    loadCourse();
-  }, [id]);
+  const { data, setData, processing, errors, submit } = useForm<LessonPayload>({
+    title: "",
+    content: "",
+    order: 0,
+  });
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    submit((formData) => updateCourse(Number(id), formData), {
-      onSuccess: () => navigate("/courses"),
+    submit((formData) => createLesson(Number(courseId), formData), {
+      onSuccess: () => navigate(`/courses/${courseId}/lessons`),
     });
   }
 
-  if (loading) {
-    return (
-      <AppLayout breadcrumbs={[{ title: "Cursos", href: "/courses" }]}>
-        <div className="flex items-center justify-center py-20 text-muted-foreground">
-          Carregando curso...
-        </div>
-      </AppLayout>
-    );
-  }
+  const breadcrumbs = [
+    { title: "Cursos", href: "/courses" },
+    { title: "Curso", href: `/courses/${courseId}` },
+    { title: "Aulas", href: `/courses/${courseId}/lessons` },
+    { title: "Nova aula", href: `/courses/${courseId}/lessons/create` },
+  ];
 
   return (
-    <AppLayout
-      breadcrumbs={[
-        { title: "Cursos", href: "/courses" },
-        { title: "Editar curso", href: `/courses/${id}/edit` },
-      ]}
-    >
+    <AppLayout breadcrumbs={breadcrumbs}>
       <div className="mb-6">
         <Link
-          to="/courses"
+          to={`/courses/${courseId}/lessons`}
           className="text-sm text-muted-foreground hover:underline"
         >
           ← Voltar
         </Link>
         <h1 className="mt-2 text-2xl font-semibold text-foreground">
-          Editar curso
+          Nova aula
         </h1>
       </div>
 
@@ -83,23 +63,37 @@ export default function CoursesEdit() {
 
         <div>
           <label
-            htmlFor="description"
+            htmlFor="content"
             className="mb-1 block text-sm font-medium text-foreground"
           >
-            Descrição
+            Conteúdo
           </label>
           <textarea
-            id="description"
-            rows={4}
-            value={data.description}
-            onChange={(e) => setData("description", e.target.value)}
+            id="content"
+            rows={5}
+            value={data.content}
+            onChange={(e) => setData("content", e.target.value)}
             className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground outline-none focus:border-ring"
           />
-          {errors.description && (
-            <p className="mt-1 text-sm text-destructive">
-              {errors.description}
-            </p>
+          {errors.content && (
+            <p className="mt-1 text-sm text-destructive">{errors.content}</p>
           )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="order"
+            className="mb-1 block text-sm font-medium text-foreground"
+          >
+            Ordem
+          </label>
+          <input
+            id="order"
+            type="number"
+            value={data.order}
+            onChange={(e) => setData("order", Number(e.target.value))}
+            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground outline-none focus:border-ring"
+          />
         </div>
 
         <button

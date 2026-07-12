@@ -1,63 +1,67 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "@/hooks/useForm";
-import { fetchCourse, updateCourse, type CoursePayload } from "@/api/courses";
+import { fetchLesson, updateLesson, type LessonPayload } from "@/api/lessons";
 import AppLayout from "@/components/app-layout";
 
-export default function CoursesEdit() {
-  const { id } = useParams();
+export default function LessonsEdit() {
+  const { courseId, id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   const { data, setData, processing, errors, reset, submit } =
-    useForm<CoursePayload>({
+    useForm<LessonPayload>({
       title: "",
-      description: "",
+      content: "",
+      order: 0,
     });
 
   useEffect(() => {
-    async function loadCourse() {
-      const course = await fetchCourse(Number(id));
-      reset({ title: course.title, description: course.description });
+    fetchLesson(Number(id)).then((lesson) => {
+      reset({
+        title: lesson.title,
+        content: lesson.content,
+        order: lesson.order,
+      });
       setLoading(false);
-    }
-
-    loadCourse();
+    });
   }, [id]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    submit((formData) => updateCourse(Number(id), formData), {
-      onSuccess: () => navigate("/courses"),
+    submit((formData) => updateLesson(Number(id), formData), {
+      onSuccess: () => navigate(`/courses/${courseId}/lessons`),
     });
   }
 
+  const breadcrumbs = [
+    { title: "Cursos", href: "/courses" },
+    { title: "Curso", href: `/courses/${courseId}` },
+    { title: "Aulas", href: `/courses/${courseId}/lessons` },
+    { title: "Editar aula", href: `/courses/${courseId}/lessons/${id}/edit` },
+  ];
+
   if (loading) {
     return (
-      <AppLayout breadcrumbs={[{ title: "Cursos", href: "/courses" }]}>
+      <AppLayout breadcrumbs={breadcrumbs}>
         <div className="flex items-center justify-center py-20 text-muted-foreground">
-          Carregando curso...
+          Carregando aula...
         </div>
       </AppLayout>
     );
   }
 
   return (
-    <AppLayout
-      breadcrumbs={[
-        { title: "Cursos", href: "/courses" },
-        { title: "Editar curso", href: `/courses/${id}/edit` },
-      ]}
-    >
+    <AppLayout breadcrumbs={breadcrumbs}>
       <div className="mb-6">
         <Link
-          to="/courses"
+          to={`/courses/${courseId}/lessons`}
           className="text-sm text-muted-foreground hover:underline"
         >
           ← Voltar
         </Link>
         <h1 className="mt-2 text-2xl font-semibold text-foreground">
-          Editar curso
+          Editar aula
         </h1>
       </div>
 
@@ -83,23 +87,37 @@ export default function CoursesEdit() {
 
         <div>
           <label
-            htmlFor="description"
+            htmlFor="content"
             className="mb-1 block text-sm font-medium text-foreground"
           >
-            Descrição
+            Conteúdo
           </label>
           <textarea
-            id="description"
-            rows={4}
-            value={data.description}
-            onChange={(e) => setData("description", e.target.value)}
+            id="content"
+            rows={5}
+            value={data.content}
+            onChange={(e) => setData("content", e.target.value)}
             className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground outline-none focus:border-ring"
           />
-          {errors.description && (
-            <p className="mt-1 text-sm text-destructive">
-              {errors.description}
-            </p>
+          {errors.content && (
+            <p className="mt-1 text-sm text-destructive">{errors.content}</p>
           )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="order"
+            className="mb-1 block text-sm font-medium text-foreground"
+          >
+            Ordem
+          </label>
+          <input
+            id="order"
+            type="number"
+            value={data.order}
+            onChange={(e) => setData("order", Number(e.target.value))}
+            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground outline-none focus:border-ring"
+          />
         </div>
 
         <button

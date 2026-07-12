@@ -1,4 +1,5 @@
 import { deleteCourse, fetchCourses, type Course } from "@/api/courses";
+import AppLayout from "@/components/app-layout";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -50,7 +51,7 @@ export default function CoursesIndex() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
+    <AppLayout breadcrumbs={[{ title: "Cursos", href: "/courses" }]}>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-foreground">Cursos</h1>
         <Link
@@ -102,6 +103,6 @@ export default function CoursesIndex() {
           ))}
         </ul>
       )}
-    </div>
+    </AppLayout>
   );
 }

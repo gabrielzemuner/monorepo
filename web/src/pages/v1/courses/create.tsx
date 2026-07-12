@@ -1,4 +1,5 @@
 import { createCourse, type CoursePayload } from "@/api/courses";
+import AppLayout from "@/components/app-layout";
 import { useForm } from "@/hooks/useForm";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -19,7 +20,12 @@ export default function CoursesCreate() {
   }
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-10">
+    <AppLayout
+      breadcrumbs={[
+        { title: "Cursos", href: "/courses" },
+        { title: "Novo curso", href: "/courses/create" },
+      ]}
+    >
       <div className="mb-6">
         <Link
           to="/courses"
@@ -81,6 +87,6 @@ export default function CoursesCreate() {
           {processing ? "Salvando..." : "Salvar"}
         </button>
       </form>
-    </div>
+    </AppLayout>
   );
 }

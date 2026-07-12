@@ -17,8 +17,8 @@ export function useForm<T>(initialData: T) {
     setDataState((prev) => ({ ...prev, [key]: value }));
   }
 
-  function reset() {
-    setDataState(initialData);
+  function reset(newData?: T) {
+    setDataState(newData ?? initialData);
     setErrors({});
   }
 

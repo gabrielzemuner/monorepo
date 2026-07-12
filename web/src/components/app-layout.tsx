@@ -1,0 +1,25 @@
+import { AppContent } from "@/components/app-content";
+import { AppShell } from "@/components/app-shell";
+import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebarHeader } from "@/components/app-sidebar-header";
+import { type BreadcrumbItem } from "@/types";
+import { type PropsWithChildren } from "react";
+
+interface AppLayoutProps {
+  breadcrumbs?: BreadcrumbItem[];
+}
+
+export default function AppLayout({
+  children,
+  breadcrumbs = [],
+}: PropsWithChildren<AppLayoutProps>) {
+  return (
+    <AppShell>
+      <AppSidebar />
+      <AppContent className="overflow-x-hidden">
+        <AppSidebarHeader breadcrumbs={breadcrumbs} />
+        <div className="px-6 py-10">{children}</div>
+      </AppContent>
+    </AppShell>
+  );
+}

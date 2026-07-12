@@ -5,7 +5,6 @@ git checkout -- . && git clean -fd
 
 # Roadmap consolidado (na ordem que você foi montando)
 ## Fase 1 — Fundação (o que já estamos fazendo)
-
 1. CourseController + LessonController na API Laravel
 2. Páginas v1 (useEffect) e v2 (React Query) consumindo essa API
 3. useForm customizado, NProgress, toast de mensagens

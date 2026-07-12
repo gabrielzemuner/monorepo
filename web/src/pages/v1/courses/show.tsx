@@ -1,4 +1,5 @@
 import { fetchCourse, type Course } from "@/api/courses";
+import AppLayout from "@/components/app-layout";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -29,24 +30,33 @@ export default function CoursesShow() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 text-muted-foreground">
-        Carregando curso...
-      </div>
+      <AppLayout breadcrumbs={[{ title: "Cursos", href: "/courses" }]}>
+        <div className="flex items-center justify-center py-20 text-muted-foreground">
+          Carregando curso...
+        </div>
+      </AppLayout>
     );
   }
 
   if (error || !course) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-10">
-        <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-destructive">
-          {error ?? "Curso não encontrado."}
-        </p>
-      </div>
+      <AppLayout breadcrumbs={[{ title: "Cursos", href: "/courses" }]}>
+        <div className="px-6 py-10">
+          <p className="max-w-xl rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-destructive">
+            {error ?? "Curso não encontrado."}
+          </p>
+        </div>
+      </AppLayout>
     );
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
+    <AppLayout
+      breadcrumbs={[
+        { title: "Cursos", href: "/courses" },
+        { title: course.title, href: `/courses/${course.id}` },
+      ]}
+    >
       <Link
         to="/courses"
         className="text-sm text-muted-foreground hover:underline"
@@ -62,6 +72,12 @@ export default function CoursesShow() {
 
         <div className="mt-6 flex gap-2">
           <Link
+            to={`/courses/${course.id}/lessons`}
+            className="rounded-md border border-input px-3 py-1.5 text-sm font-medium text-foreground hover:bg-accent"
+          >
+            Ver aulas
+          </Link>
+          <Link
             to={`/courses/${course.id}/edit`}
             className="rounded-md border border-input px-3 py-1.5 text-sm font-medium text-foreground hover:bg-accent"
           >
@@ -69,6 +85,6 @@ export default function CoursesShow() {
           </Link>
         </div>
       </div>
-    </div>
+    </AppLayout>
   );
 }
