@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": ".docs",
+			"path": ".docs"
+		},
+		{
+			"name": "api",
+			"path": "api"
+		},
+		{
+			"name": "web",
+			"path": "web"
+		}
+	],
+	"settings": {}
+}
